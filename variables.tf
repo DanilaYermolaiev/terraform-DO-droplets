@@ -7,10 +7,6 @@ variable "ssh_name" {
   description   = "Ssh keys in DigitalOcean"
     type        = string
 }
-variable "droplet_name" {
-  description   = "Server name"
-    type        = string
-}
 variable "droplet_image" {
   description   = "Image identifier of the OS in DigitalOcean"
     type        = string

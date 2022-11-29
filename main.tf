@@ -1,7 +1,7 @@
 # Droplet
 resource "digitalocean_droplet" "web" {
   image              = var.droplet_image
-  name               = var.droplet_name
+  name               = "dev-${random_string.random.result}"
   region             = var.droplet_region
   size               = var.droplet_size
   backups            = false
@@ -45,7 +45,7 @@ resource "digitalocean_droplet" "web" {
 
 # Firewall
 resource "digitalocean_firewall" "web" {
-  name = "only-allow-ssh-http-and-https"
+  name = "firewall-${random_string.random.result}"
 
   droplet_ids = [digitalocean_droplet.web.id]
 
@@ -90,3 +90,8 @@ resource "digitalocean_firewall" "web" {
   }
 }
 
+resource "random_string" "random" {
+  length  = 3
+  upper   = false
+  special = false
+}
