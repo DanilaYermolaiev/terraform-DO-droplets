@@ -6,6 +6,7 @@ terraform {
   }
 }
 
+
 provider "digitalocean" {
   token = var.do_token
 }
@@ -13,3 +14,4 @@ provider "digitalocean" {
 data "digitalocean_ssh_key" "ssh" {
   name = var.ssh_name
 }
+

@@ -27,3 +27,9 @@ variable "privatekeypath" {
   description = "Privat ssh key"
     type        = string
 }
+
+variable "publicekeypath" {
+  description = "Public ssh key"
+    type        = string
+}
+
