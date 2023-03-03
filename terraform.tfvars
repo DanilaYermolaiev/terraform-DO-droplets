@@ -1,4 +1,4 @@
-do_token = "dop_v1_08b7ba76670bb00624b8285ad938fee16c4256ef37d11fca872d4c230ee45a44" # Digital Ocean token
+do_token = "dop_v1_cccdbf3ae9811a2b9f2018fb919b8aadba5e8a999355fb60d04a75e5c006668e" # Digital Ocean token
 
 ssh_name = "case" # Keys on Digital Ocean
 user = "root" # ssh user
