@@ -19,24 +19,17 @@ stages:
   - destroy
 
 terraform:
-  stage: plan
+  stage: plan,apply
   script:
     - terraform init
     - terraform validate
     - terraform plan -var-file=terraform.tfvars -out=tfplan
+    - terraform apply -auto-approve tfplan
   artifacts:
     paths:
       - tfplan
-
-terraform_apply:
-  stage: apply
-  script:
-    - terraform init
-    - terraform validate
-    - terraform apply -auto-approve tfplan
   environment:
     name: production
-
     on_stop: stop_terraform
 
 stop_terraform:
