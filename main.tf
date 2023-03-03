@@ -1,3 +1,8 @@
+resource "digitalocean_ssh_key" "mypub" {
+  name       = "Pubkeys"
+  public_key = file(var.publicekeypath)
+}
+
 # Droplet
 resource "digitalocean_droplet" "web" {
   image              = var.droplet_image
@@ -7,9 +12,7 @@ resource "digitalocean_droplet" "web" {
   backups            = false
   monitoring         = true
   count  = 1
-  ssh_keys = [
-    data.digitalocean_ssh_key.ssh.id
-    ]
+  ssh_keys = [digitalocean_ssh_key.mypub.fingerprint]
 
   ## Files
   provisioner "file" {
