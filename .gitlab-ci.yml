@@ -19,7 +19,7 @@ stages:
   - destroy
 
 terraform:
-  stage: plan,apply
+  stage: plan_apply
   script:
     - terraform init
     - terraform validate
