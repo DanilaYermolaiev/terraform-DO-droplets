@@ -31,6 +31,8 @@ terraform:
 terraform_apply:
   stage: apply
   script:
+    - terraform init
+    - terraform validate
     - terraform apply -auto-approve tfplan
   environment:
     name: production
