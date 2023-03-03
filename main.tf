@@ -2,15 +2,6 @@ resource "digitalocean_ssh_key" "mypub" {
   name       = "Pubkeys"
   public_key = file(var.publicekeypath)
 }
-
-
-# data "digitalocean_ssh_keys" "mypub" {
-#   sort {
-#     key       = "case"
-#     direction = "asc"
-#   }
-# }
-
 # Droplet
 resource "digitalocean_droplet" "web" {
   image              = var.droplet_image
@@ -57,14 +48,12 @@ resource "digitalocean_droplet" "web" {
   }
   #   provisioner "local-exec" {
   #   command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook  -u root -i '${self.ipv4_address},' --private-key ${var.privatekeypath} -e 'pub_key=${var.publicekeypath}' files/install.yml"
-
   # }
 }
 
 # Firewall
 resource "digitalocean_firewall" "web" {
   name = "firewall-${random_string.random.result}"
-
   # droplet_ids = [digitalocean_droplet.web.id]
 
   inbound_rule {
