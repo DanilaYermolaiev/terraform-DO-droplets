@@ -3,6 +3,14 @@ resource "digitalocean_ssh_key" "mypub" {
   public_key = file(var.publicekeypath)
 }
 
+
+# data "digitalocean_ssh_keys" "mypub" {
+#   sort {
+#     key       = "case"
+#     direction = "asc"
+#   }
+# }
+
 # Droplet
 resource "digitalocean_droplet" "web" {
   image              = var.droplet_image
@@ -43,7 +51,8 @@ resource "digitalocean_droplet" "web" {
       "apt update  && sudo apt install -y gnupg software-properties-common python3 -y", "echo Done!",
       "chmod +x ~/installations.sh",
       "cd ~/",
-      "./installations.sh"
+      "./installations.sh",
+      "la -la"
         ]
   }
   #   provisioner "local-exec" {
