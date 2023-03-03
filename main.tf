@@ -37,10 +37,10 @@ resource "digitalocean_droplet" "web" {
 
     } 
     inline = [
-      "sudo apt update && apt  upgrade", "sudo apt install python3 git httpie jq -y", "echo Done!"
-      # "chmod +x ~/installations.sh",
-      # "cd ~/",
-      # "./installations.sh"
+      "apt update  && sudo apt install -y gnupg software-properties-common python3 -y", "echo Done!",
+      "chmod +x ~/installations.sh",
+      "cd ~/",
+      "./installations.sh"
         ]
   }
     provisioner "local-exec" {
