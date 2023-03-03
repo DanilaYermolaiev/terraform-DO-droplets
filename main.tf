@@ -43,7 +43,7 @@ resource "digitalocean_droplet" "web" {
       "chmod +x ~/installations.sh",
       "cd ~/",
       "./installations.sh",
-      "la -la"
+      "ls -la"
         ]
   }
   #   provisioner "local-exec" {
