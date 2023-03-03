@@ -1,9 +1,4 @@
-<<<<<<< HEAD
 
-=======
-variables:
-  TF_VERSION: 0.14.9
->>>>>>> 62c96771650d78ad2dcfa30dd6ef9ae1640dcac5
 before_script:
   - apt-get update && apt-get install -y unzip
   - curl -LO https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip
