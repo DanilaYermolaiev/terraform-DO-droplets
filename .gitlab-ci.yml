@@ -13,22 +13,15 @@ variables:
 
 
 before_script:
-  - apt-get update && apt-get install -y unzip
+  - apt-get update && apt-get install -y unzip openssh-client
   - curl -LO https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip
   - unzip terraform_${TF_VERSION}_linux_amd64.zip
   - mv terraform /usr/local/bin/
-
-
-  ## Install ssh-agent if not already installed, it is required by Docker.
-  ## (change apt-get to yum if you use an RPM-based image)
-  - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
-  
-   # Create the SSH directory and give it the right permissions
   - mkdir -p ~/.ssh
   - chmod 700 ~/.ssh
-  ## Run ssh-agent (inside the build environment)
   - eval $(ssh-agent -s)
   - echo "$SSH_PRIV_KEY" | tr -d '\r' | ssh-add -
+
 stages:
   - plan
   - apply
