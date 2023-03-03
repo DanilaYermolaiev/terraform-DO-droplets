@@ -1,19 +1,8 @@
 variables:
   TF_VERSION: 0.14.9
-  # DO_ACCESS_TOKEN: <your digitalocean access token>
-  # DO_REGION: nyc1
-  # DO_SIZE: s-1vcpu-1gb
-  # DO_IMAGE: ubuntu-20-04-x64
-  # DO_SSH_KEY: <your digitalocean ssh key fingerprint>
-  # TF_VAR_do_token: $DO_ACCESS_TOKEN
-  # TF_VAR_do_region: $DO_REGION
-  # TF_VAR_do_size: $DO_SIZE
-  # TF_VAR_do_image: $DO_IMAGE
-  # TF_VAR_do_ssh_key: $DO_SSH_KEY
-
 
 before_script:
-  - apt-get update && apt-get install -y unzip openssh-client
+  - apt-get update && apt-get install -y unzip
   - curl -LO https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip
   - unzip terraform_${TF_VERSION}_linux_amd64.zip
   - mv terraform /usr/local/bin/
@@ -21,7 +10,7 @@ before_script:
   - chmod 700 ~/.ssh
   - eval $(ssh-agent -s)
   - echo "$SSH_PRIV_KEY" | tr -d '\r' | ssh-add -
-
+  
 stages:
   - plan
   - apply
@@ -42,20 +31,16 @@ terraform_apply:
   script:
     - terraform apply -auto-approve tfplan
   environment:
-    name: my-environment
+    name: production
+
     on_stop: stop_terraform
 
-terraform_destroy:
+stop_terraform:
   stage: destroy
   script:
     - terraform destroy -auto-approve
-  environment:
-    name: my-environment
-    action: stop
-
-stop_terraform:
-  stage: stop
-  script:
-    - terraform state pull > terraform.tfstate
-    - terraform destroy -auto-approve
   when: manual
+  allow_failure: true
+  environment:
+    name: production
+    action: stop
