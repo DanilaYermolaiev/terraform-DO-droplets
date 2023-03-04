@@ -36,8 +36,7 @@ stop_terraform:
   script:
     - terraform destroy -auto-approve
   when: manual
-  dependencies:
-    - planapply
+ 
   allow_failure: true
   environment:
     name: production
