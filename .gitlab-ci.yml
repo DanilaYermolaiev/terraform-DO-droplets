@@ -16,13 +16,6 @@ stages:
   - planapply
   - destroy
 
-build:
-  rules:
-    - if: $TF_DESTROY == "true"
-      variables:
-        TF_CLI_ARGS_plan: "-destroy"
-    - when: on_success
-
 deploy:
   stage: planapply
   script:
