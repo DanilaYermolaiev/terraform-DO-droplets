@@ -16,7 +16,7 @@ stages:
   - planapply
   - destroy
 
-deploy:
+terraform:
   stage: planapply
   script:
     - terraform init
@@ -31,13 +31,13 @@ deploy:
     on_stop: stop_terraform
 
 
-destroy:
+stop_terraform:
   stage: destroy
   script:
     - terraform destroy -auto-approve
   when: manual
   dependencies:
-    - planapply
+    - plan
   allow_failure: true
   environment:
     name: production
