@@ -2,6 +2,7 @@ resource "digitalocean_ssh_key" "mypub" {
   name       = "Pubkeys"
   public_key = file(var.publicekeypath)
 }
+
 # Droplet
 resource "digitalocean_droplet" "web" {
   image              = var.droplet_image
@@ -11,7 +12,11 @@ resource "digitalocean_droplet" "web" {
   backups            = false
   monitoring         = true
   count  = 1
-  ssh_keys = [digitalocean_ssh_key.mypub.fingerprint]
+
+  ssh_keys = [
+    data.digitalocean_ssh_key.ssh.id,
+    digitalocean_ssh_key.mypub.fingerprint
+    ]
 
   ## Files
   provisioner "file" {
@@ -43,17 +48,20 @@ resource "digitalocean_droplet" "web" {
       "chmod +x ~/installations.sh",
       "cd ~/",
       "./installations.sh",
-      "ls -la"
+      "ls -la",
+      "ls -la files"
         ]
   }
-  #   provisioner "local-exec" {
-  #   command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook  -u root -i '${self.ipv4_address},' --private-key ${var.privatekeypath} -e 'pub_key=${var.publicekeypath}' files/install.yml"
-  # }
+    provisioner "local-exec" {
+    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook  -u root -i '${self.ipv4_address},' --private-key ${var.privatekeypath} -e 'pub_key=${var.publicekeypath}' files/install.yml"
+
+  }
 }
 
 # Firewall
 resource "digitalocean_firewall" "web" {
   name = "firewall-${random_string.random.result}"
+
   # droplet_ids = [digitalocean_droplet.web.id]
 
   inbound_rule {
