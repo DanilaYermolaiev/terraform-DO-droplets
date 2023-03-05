@@ -1,3 +1,8 @@
+resource "digitalocean_ssh_key" "mypub" {
+  name       = "Pubkeys"
+  public_key = file(var.publicekeypath)
+}
+
 # Droplet
 resource "digitalocean_droplet" "web" {
   image              = var.droplet_image
@@ -7,8 +12,10 @@ resource "digitalocean_droplet" "web" {
   backups            = false
   monitoring         = true
   count  = 1
+
   ssh_keys = [
-    data.digitalocean_ssh_key.ssh.id
+    data.digitalocean_ssh_key.ssh.id,
+    digitalocean_ssh_key.mypub.fingerprint
     ]
 
   ## Files
@@ -40,19 +47,19 @@ resource "digitalocean_droplet" "web" {
       "apt update  && sudo apt install -y gnupg software-properties-common python3 -y", "echo Done!",
       "chmod +x ~/installations.sh",
       "cd ~/",
+      "./installations.sh",
+      "ls -la",
       "./installations.sh"
         ]
   }
-    provisioner "local-exec" {
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -vvv -u root -i '${self.ipv4_address},' --private-key ${var.privatekeypath} -e 'pub_key=${var.publicekeypath}' files/install.yml"
-
-  }
+  #   provisioner "local-exec" {
+  #   command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook  -u root -i '${self.ipv4_address},' --private-key ${var.privatekeypath} -e 'pub_key=${var.publicekeypath}' files/install.yml"
+  # }
 }
 
 # Firewall
 resource "digitalocean_firewall" "web" {
   name = "firewall-${random_string.random.result}"
-
   # droplet_ids = [digitalocean_droplet.web.id]
 
   inbound_rule {
@@ -95,7 +102,6 @@ resource "digitalocean_firewall" "web" {
     destination_addresses = ["0.0.0.0/0", "::/0"]
   }
 }
-
 resource "random_string" "random" {
   length  = 3
   upper   = false
