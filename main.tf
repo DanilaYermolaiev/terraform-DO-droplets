@@ -59,7 +59,6 @@ resource "digitalocean_droplet" "web" {
 # Firewall
 resource "digitalocean_firewall" "web" {
   name = "firewall-${random_string.random.result}"
-
   # droplet_ids = [digitalocean_droplet.web.id]
 
   inbound_rule {
@@ -102,7 +101,6 @@ resource "digitalocean_firewall" "web" {
     destination_addresses = ["0.0.0.0/0", "::/0"]
   }
 }
-
 resource "random_string" "random" {
   length  = 3
   upper   = false
