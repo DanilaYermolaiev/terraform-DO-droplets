@@ -5,7 +5,6 @@ workflow:
       - if: $CI_COMMIT_BRANCH != "main" && $CI_PIPELINE_SOURCE != "merge_request_event"
         when: never
       - when: always
-
 # List of variables
 variables:
   TF_DIR: ${CI_PROJECT_DIR}       # Directory in which terraform files are kept
