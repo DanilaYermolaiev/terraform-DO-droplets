@@ -10,16 +10,16 @@
       state: present
       key: "{{ lookup('file', pub_key) }}"
         
-  - name: packages | ensure apt list dir exists
-    file:
-      path: /var/lib/apt/lists/
-      state: directory
-      mode: 0755
+  # - name: packages | ensure apt list dir exists
+  #   file:
+  #     path: /var/lib/apt/lists/
+  #     state: directory
+  #     mode: 0755
 
-  - name: Update apt cache
-    become: yes
-    apt:
-      update_cache: yes
+  # - name: Update apt cache
+  #   become: yes
+  #   apt:
+  #     update_cache: yes
 
   #install packages for ubuntu 20.04
   - name: Install additional packages
@@ -31,14 +31,8 @@
         - curl
         - htop
         - git 
-        - openconnect
-        - ocserv
         - certbot
         - nginx
-        - openconnect
-        - network-manager-openconnect
-        - network-manager-openconnect-gnome
-        - make
     tags:
       - config.packages
 

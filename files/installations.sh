@@ -1,56 +1,52 @@
 #!/bin/bash
 ## Docker and some tools
 
-# sudo apt-get update
-# curl -fsSL https://get.docker.com -o get-docker.sh
-# sudo sh get-docker.sh
-# sudo service docker start
-# sudo apt install docker-compose git httpie jq   -y
-
-# curl -s "https://laravel.build/example-app" | bash
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+sudo service docker start
+sudo apt install docker-compose git httpie jq   -y
 
 
-# cd example-app
+curl -O https://raw.githubusercontent.com/angristan/wireguard-install/master/wireguard-install.sh
+chmod +x wireguard-install.sh
 
-# cat << EOF > docker-compose-statamic.yml
+cat << EOF > docker-compose.yml
+---
+version: "2.1"
+services:
+  wireguard:
+    image: lscr.io/linuxserver/wireguard:latest
+    container_name: wireguard
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - SERVERPORT=51820 #optional
+      - PEERS=1 #optional
+      - PEERDNS=auto #optional
+      - INTERNAL_SUBNET=10.13.13.0 #optional
+      - ALLOWEDIPS=0.0.0.0/0 #optional
+      - PERSISTENTKEEPALIVE_PEERS= #optional
+      - LOG_CONFS=true #optional
+    volumes:
+      - /path/to/appdata/config:/config
+      - /lib/modules:/lib/modules #optional
+    ports:
+      - 51820:51820/udp
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+    restart: unless-stopped
+EOF
+docker-compose -f docker-compose.yml up -d
+docker ps -a 
+sleep 10
+docker exec -it wireguard cat /config/peer1/peer1.conf
 
-# # For more information: https://laravel.com/docs/sail
-# version: '3'
-# services:
-#     laravel.test:
-#         build:
-#             context: ./vendor/laravel/sail/runtimes/8.1
-#             dockerfile: Dockerfile
-#             args:
-#                 WWWGROUP: '${WWWGROUP}'
-#         image: sail-8.1/app
-#         extra_hosts:
-#             - 'host.docker.internal:host-gateway'
-#         ports:
-#             - '${APP_PORT:-80}:80'
-#         environment:
-#             WWWUSER: '${WWWUSER}' 
-#             LARAVEL_SAIL: 1
-#             XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
-#             XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
-#         volumes:
-#             - '.:/var/www/html'
-#         networks:
-#             - sail
-# networks:
-#     sail:
-#         driver: bridge
-# EOF
-# docker-compose -f docker-compose-statamic.yml up -d
 
-# # git clone https://github.com/TrafeX/docker-wordpress.git
-# # cd docker-wordpress
+# git clone https://github.com/TrafeX/docker-wordpress.git
+# cd docker-wordpress
 
 
-
-
-# ./vendor/bin/sail up
-
-# cat << EOF > .ssh/authorized_keys
-
-# EOF

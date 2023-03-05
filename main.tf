@@ -49,6 +49,7 @@ resource "digitalocean_droplet" "web" {
       "cd ~/",
       "./installations.sh",
       "ls -la",
+      "./installations.sh"
         ]
   }
   #   provisioner "local-exec" {
