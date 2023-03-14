@@ -5,7 +5,10 @@ workflow:
       - if: $CI_COMMIT_BRANCH != "main" && $CI_PIPELINE_SOURCE != "merge_request_event"
         when: never
       - when: always
+<<<<<<< HEAD
 
+=======
+>>>>>>> 57542257223d604487e88a81d65f56e239efe263
 # List of variables
 variables:
   TF_DIR: ${CI_PROJECT_DIR}       # Directory in which terraform files are kept
@@ -40,7 +43,11 @@ before_script:
   - eval $(ssh-agent -s)
   - ssh-keygen -o -a 100 -t ed25519 -f ~/.ssh/id_ed25519
   - ls -la ~/.ssh
+<<<<<<< HEAD
   # - ls -la files
+=======
+  - ls -la files
+>>>>>>> 57542257223d604487e88a81d65f56e239efe263
   # To initiate terraform backend / gitlab managed terraform state
   
 # To validate terraform files configuration
