@@ -4,6 +4,7 @@ terraform {
       source = "digitalocean/digitalocean"
     }
   }
+  backend "http" {}
 }
 
 provider "digitalocean" {
