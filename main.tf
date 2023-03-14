@@ -26,6 +26,7 @@ resource "digitalocean_droplet" "web" {
 
     } 
   }
+
   provisioner "remote-exec" {
     connection {
     host = self.ipv4_address
@@ -43,8 +44,22 @@ resource "digitalocean_droplet" "web" {
       "./installations.sh"
         ]
   }
+      provisioner "file" {
+    source = "files/install.yml"
+    destination = "install.yml"
+
+    connection {
+    host = self.ipv4_address
+    type = "ssh"
+    user  = var.user
+    private_key = file(var.privatekeypath)
+    agent  = false
+    timeout  = "90s"
+
+    } 
+  }
     provisioner "local-exec" {
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -vvv -u root -i '${self.ipv4_address},' --private-key ${var.privatekeypath} -e 'pub_key=${var.publicekeypath}' files/install.yml"
+    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u root -i '${self.ipv4_address},' --private-key ${var.privatekeypath} -e 'pub_key=${var.publicekeypath}' files/install.yml"
 
   }
 }
