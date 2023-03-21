@@ -25,7 +25,6 @@ before_script:
   - chmod 700 ~/.ssh
   - ssh-keygen -o -a 100 -t ed25519 -f ~/.ssh/id_ed25519
   - ls -la ~/.ssh
-  - ls -la  && ls -la files/
 
 stages:
   - apply
