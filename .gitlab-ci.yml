@@ -5,75 +5,39 @@ workflow:
       - if: $CI_COMMIT_BRANCH != "main" && $CI_PIPELINE_SOURCE != "merge_request_event"
         when: never
       - when: always
+    
 
-# List of variables
 variables:
-  TF_DIR: ${CI_PROJECT_DIR}       # Directory in which terraform files are kept
-  STATE_NAME: "tf_state"          # Name of terraform state used in "terraform init"command
-  ADDRESS: "https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/terraform/state/${STATE_NAME}"
+  TF_VERSION: 1.4.1
 
-# Stages of the pipeline
-stages:
-  - validate
-  - plan
-  - apply
-  - destroy
-
-# Image which will use in each stage
-image:
-  name: hashicorp/terraform:light
-  entrypoint: [""]
-
-# Script to be executed before each stage 
 before_script:
+  - apt-get update && apt-get install -y unzip
+  - curl -LO https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip
+  - unzip terraform_${TF_VERSION}_linux_amd64.zip
+  - mv terraform /usr/local/bin/
+
+  - curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+  - python3 get-pip.py --user
+  - python3 -m pip install --user ansible
+  - apt-get update && apt-get install -y unzip
   - terraform --version
-  - export GITLAB_ACCESS_TOKEN=$TOKEN
-  - cd ${TF_DIR}            # To get inside the working directory
-  - terraform init  -reconfigure  
-  - backend-config="address=${ADDRESS}" 
-  - backend-config="lock_address=${ADDRESS}/lock" 
-  - backend-config="unlock_address=${ADDRESS}/lock" 
-  - backend-config="username=case0sj" 
-  - backend-config="password=$GITLAB_ACCESS_TOKEN" 
-  - backend-config="lock_method=POST" 
-  - backend-config="unlock_method=DELETE" 
-  - backend-config="retry_wait_min=5"    
   - mkdir -p ~/.ssh
   - chmod 700 ~/.ssh
-  - eval $(ssh-agent -s)
   - ssh-keygen -o -a 100 -t ed25519 -f ~/.ssh/id_ed25519
   - ls -la ~/.ssh
+  - ls -la  && ls -la files/
 
-  # To initiate terraform backend / gitlab managed terraform state
-  
-# To validate terraform files configuration
-validate:
-  stage: validate
-  script:
-    - terraform validate
+stages:
+  - apply
 
-# To check the plan of the infrastructure
-plan:
-  stage: plan
-  script:
-    - terraform plan 
-  dependencies:              
-    - validate
-
-# To create infrastructure on AWS
-apply:
+terraform_apply:
   stage: apply
   script:
-    - terraform apply  -auto-approve
-  dependencies:              
-    - plan
-
-# To destroy infrastructure on cloud. It needs manual approval 
-destroy:
-  stage: destroy
-  script:
-    - terraform destroy  -auto-approve
-  dependencies:          
-    - plan
-    - apply
-  when: manual
+    - terraform init
+    - terraform validate
+    - terraform plan -var-file=terraform.tfvars -out=tfplan
+    - terraform apply -auto-approve tfplan
+  artifacts:
+    paths:
+      - tfplan
+    
