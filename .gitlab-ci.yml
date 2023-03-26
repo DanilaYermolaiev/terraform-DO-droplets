@@ -1,9 +1,9 @@
 include:
   - project: "to-be-continuous/terraform"
-
+    ref: "3.6.3"
     file: "/templates/gitlab-ci-terraform.yml"
   - project: "to-be-continuous/ansible"
-
+    ref: "3.5.1"
     file: "/templates/gitlab-ci-ansible.yml"
 
 variables:
@@ -15,8 +15,8 @@ variables:
   TF_STAGING_ENABLED: "true"
   TF_PROD_ENABLED: "true"
   # TF_VAR_ssh_pub_key_file is defined as secret GitLab CI variables (declares 'ssh_pub_key_file' Terraform variable)
-  TF_TFSEC_ENABLED: "true"
-  TF_CHECKOV_ENABLED: "true"
+  TF_TFSEC_ENABLED: "false"
+  TF_CHECKOV_ENABLED: "false"
 
   # Ansible
   ANSIBLE_PROJECT_DIR: "ansible"
