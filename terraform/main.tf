@@ -53,11 +53,9 @@ resource "aws_key_pair" "ansible_keypair" {
   }
 }
 
-
 resource "tls_private_key" "ssh_key" {
   algorithm = "ED25519"
 }
-
 
 # Get latest Ubuntu Linux Bionic Beaver
 data "aws_ami" "ubuntu-linux-2004" {
