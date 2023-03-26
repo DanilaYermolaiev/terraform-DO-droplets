@@ -57,6 +57,7 @@ resource "aws_key_pair" "ansible_keypair" {
   key_name   = "${var.environment_slug}-ansible-key"
   public_key = file(var.ssh_pub_key_file)
 }
+
 # Get latest Ubuntu Linux Bionic Beaver
 data "aws_ami" "ubuntu-linux-2004" {
   most_recent = true
