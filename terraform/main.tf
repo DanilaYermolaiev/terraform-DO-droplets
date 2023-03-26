@@ -41,7 +41,6 @@ data "aws_ami" "al2_latest" {
     values = ["amzn2-ami-hvm-*-x86_64-ebs"]
   }
 }
-
 resource "aws_instance" "webserver" {
   ami                         = data.aws_ami.ubuntu-linux-2004.id
   instance_type               = var.instance_type
@@ -59,30 +58,6 @@ resource "aws_key_pair" "ansible_keypair" {
   public_key = file(var.ssh_pub_key_file)
 }
 # Get latest Ubuntu Linux Bionic Beaver
-data "aws_ami" "ubuntu-linux-2004" {
-  most_recent = true
-  owners      = ["099720109477"] # Canonical
-  filter {
-    name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
-  }
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-}
-data "aws_ami" "ubuntu-linux-2004" {
-  most_recent = true
-  owners      = ["099720109477"] # Canonical
-  filter {
-    name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
-  }
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-}
 data "aws_ami" "ubuntu-linux-2004" {
   most_recent = true
   owners      = ["099720109477"] # Canonical
