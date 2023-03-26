@@ -1,8 +1,8 @@
 include:
-  - project: "case0sh /terraform-DO-droplets/terraform"
+  - project: "to-be-continuous/terraform"
     ref: "3.6.3"
     file: "/templates/gitlab-ci-terraform.yml"
-  - project: "case0sh /terraform-DO-droplets/ansible"
+  - project: "to-be-continuous/ansible"
     ref: "3.5.1"
     file: "/templates/gitlab-ci-ansible.yml"
 
