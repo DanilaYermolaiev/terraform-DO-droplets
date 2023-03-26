@@ -8,12 +8,11 @@ then
 fi
 
 # TODO: replace 3 next variables
-# PROJECT_PATH=${CI_PROJECT_PATH:-to-be-continuous/samples/terraform-ansible-on-aws}
+PROJECT_PATH=${CI_PROJECT_PATH:-case0sh/terraform-DO-droplets}
 ENV_NAME=${TF_ENV_NAME:-dev}
 
 CI_API_V4_URL=https://gitlab.com/api/v4
-CI_PROJECT_ID="44634572"
-# ${PROJECT_PATH//\//%2f}
+CI_PROJECT_ID=${PROJECT_PATH//\//%2f}
 
 TF_HTTP_ADDRESS="${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/terraform/state/$ENV_NAME"
 TF_HTTP_LOCK_ADDRESS="${TF_HTTP_ADDRESS}/lock"
