@@ -32,15 +32,6 @@ resource "aws_security_group" "webserver_sg" {
 }
 
 # EC2 instance
-data "aws_ami" "al2_latest" {
-  owners      = ["amazon"]
-  most_recent = true
-
-  filter {
-    name   = "name"
-    values = ["amzn2-ami-hvm-*-x86_64-ebs"]
-  }
-}
 resource "aws_instance" "webserver" {
   ami                         = data.aws_ami.ubuntu-linux-2004.id
   instance_type               = var.instance_type
