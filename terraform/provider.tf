@@ -18,6 +18,7 @@ terraform {
 
 # Enable the AWS Provider (configured by env variables)
 provider "aws" {      
+  version = "~> 4.60.0"
   region     = var.aws_region
 }
 
