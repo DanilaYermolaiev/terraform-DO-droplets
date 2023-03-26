@@ -37,16 +37,6 @@ variable "ssh_user_name" {
   default = "terralab"
 }
 
-# variable "config_files" {
-#   type = string
-#   description = "AWS access key"
-# }
-
-# variable "credentials_files" {
-#   type = string
-#   description = "AWS secret key"
-# }
-
 variable "aws_region" {
   type = string
   description = "AWS region"
