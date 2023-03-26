@@ -28,14 +28,14 @@ variable "instance_type" {
 variable "ssh_pub_key_file" {
   description = "SSH public key file"
   type = string
-  default = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOWDHuzNbTpxrGtGS4dhTqRctyWOgDuuPjKjmBk14nf+"
+
   sensitive = true
 }
 
 variable "ssh_user_name" {
   description = "SSH username"
   type = string
-  default = "ec2-user"
+  default = "terralab"
 }
 
 # variable "config_files" {
