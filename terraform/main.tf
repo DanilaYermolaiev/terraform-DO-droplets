@@ -1,21 +1,3 @@
-# Define required providers
-terraform {
-  # using GitLab http backend
-  # see: https://docs.gitlab.com/ee/user/infrastructure/terraform_state.html
-  # backend "http" {
-  #   # auto-configured by the template
-  # }
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-    }
-  }
-}
-
-# Enable the AWS Provider (configured by env variables)
-provider "aws" {
-}
-
 # Security Group
 resource "aws_security_group" "webserver_sg" {
   name = "${var.environment_slug}-webserver-sg"
@@ -61,9 +43,9 @@ data "aws_ami" "al2_latest" {
 }
 
 resource "aws_instance" "webserver" {
-  ami                         = data.aws_ami.al2_latest.image_id
+  ami                         = data.aws_ami.ubuntu-linux-1804.id
   instance_type               = var.instance_type
-  # user_data                 = file("init-script.sh")
+  user_data                   = file("aws-user-data.sh")
   key_name                    = aws_key_pair.ansible_keypair.key_name
   associate_public_ip_address = true
   vpc_security_group_ids = [ aws_security_group.webserver_sg.id ]
@@ -76,4 +58,17 @@ resource "aws_instance" "webserver" {
 resource "aws_key_pair" "ansible_keypair" {
   key_name   = "${var.environment_slug}-ansible-key"
   public_key = file(var.ssh_pub_key_file)
+}
+# Get latest Ubuntu Linux Bionic Beaver 18.04 AMI
+data "aws_ami" "ubuntu-linux-1804" {
+  most_recent = true
+  owners      = ["099720109477"] # Canonical
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"]
+  }
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
 }
