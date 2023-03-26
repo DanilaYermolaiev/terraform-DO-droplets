@@ -32,6 +32,8 @@ resource "aws_security_group" "webserver_sg" {
 }
 
 # EC2 instance
+
+}
 resource "aws_instance" "webserver" {
   ami                         = data.aws_ami.ubuntu-linux-2004.id
   instance_type               = var.instance_type
@@ -45,10 +47,9 @@ resource "aws_instance" "webserver" {
 }
 
 resource "aws_key_pair" "ansible_keypair" {
-  key_name   = "${var.environment_slug}"
-  public_key = file(var.ssh_pub_key_file)
+  key_name   = "${var.environment_slug}-ansible-key"
+  public_key = var.ssh_pub_key_file
 }
-
 # Get latest Ubuntu Linux Bionic Beaver
 data "aws_ami" "ubuntu-linux-2004" {
   most_recent = true
