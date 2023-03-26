@@ -5,7 +5,10 @@ include:
   - project: "to-be-continuous/ansible"
     ref: "3.5.1"
     file: "/templates/gitlab-ci-ansible.yml"
-
+before_script:
+  - terraform --version
+  - echo ${TF_VAR_ssh_pub_key}
+  - echo ${ssh_pub_key_file}
 variables:
   # non-secret AWS variables
   # AWS_ACCESS_KEY_ID & AWS_SECRET_ACCESS_KEY & AWS_DEFAULT_REGION are defined as secret GitLab CI variables
@@ -14,7 +17,7 @@ variables:
   TF_PROJECT_DIR: "terraform"
   TF_STAGING_ENABLED: "true"
   TF_PROD_ENABLED: "true"
-  TF_VAR_ssh_pub_key: "ssh_pub_key_file"
+  TF_VAR_ssh_pub_key: $ssh_pub_key_file
   #file is defined as secret GitLab CI variables (declares 'ssh_pub_key_file' Terraform variable)
   TF_TFSEC_ENABLED: "false"
   TF_CHECKOV_ENABLED: "false"
