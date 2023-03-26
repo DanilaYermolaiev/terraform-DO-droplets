@@ -1,0 +1,17 @@
+---
+- hosts: webserver
+  gather_facts: True
+  become: True
+
+  vars:
+    os_ignore_users: ['ubuntu']
+
+  roles:
+    - role: common
+      tags: ["init"]
+
+    - role: httpd
+      tags: ["httpd"]
+
+    # - role: reboot
+    #   tags: ["init"]

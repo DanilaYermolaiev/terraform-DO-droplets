@@ -1,0 +1,21 @@
+---
+- name: Install Apache
+  yum:
+    name: httpd
+    state: latest
+
+- name: Enable Apache service
+  service:
+    name: httpd
+    state: started
+    enabled: yes
+
+- name: Generate index page
+  template:
+    src: index.html.j2
+    dest: /var/www/html/index.html
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart httpd
