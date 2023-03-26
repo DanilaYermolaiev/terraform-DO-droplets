@@ -46,7 +46,7 @@ resource "aws_instance" "webserver" {
 
 resource "aws_key_pair" "ansible_keypair" {
   key_name   = "${var.environment_slug}-ansible-key"
-  public_key = var.ssh_pub_key_file
+  public_key = file(var.ssh_pub_key_file)
 }
 
 # Get latest Ubuntu Linux Bionic Beaver
