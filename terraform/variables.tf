@@ -28,7 +28,6 @@ variable "instance_type" {
 variable "ssh_pub_key_file" {
   description = "SSH public key file"
   type = string
-
   sensitive = true
 }
 
