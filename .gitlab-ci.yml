@@ -36,7 +36,7 @@ stages:
   - deploy
   - acceptance
   - publish
-  - ssh_pub_key_filenfra-prod
+  - infra-prod
   - production
 
 # override tfsec to allow failure
