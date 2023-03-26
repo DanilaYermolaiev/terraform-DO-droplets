@@ -19,8 +19,6 @@ terraform {
 # Enable the AWS Provider (configured by env variables)
 
 provider "aws" {
-  # access_key = var.aws_access_key
-  # secret_key = var.aws_secret_key
   region     = var.aws_region
   shared_config_files      = ["~/.aws/config"]
   shared_credentials_files = ["~/.aws/credentials"]

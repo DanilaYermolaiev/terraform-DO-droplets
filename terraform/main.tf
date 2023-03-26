@@ -49,7 +49,6 @@ resource "aws_instance" "webserver" {
   key_name                    = aws_key_pair.ansible_keypair.key_name
   associate_public_ip_address = true
   vpc_security_group_ids = [ aws_security_group.webserver_sg.id ]
-
   tags = {
     Name = "${var.environment_slug}-webserver"
   }
