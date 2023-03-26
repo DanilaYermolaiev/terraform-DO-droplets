@@ -10,7 +10,6 @@ fi
 # TODO: replace 3 next variables
 PROJECT_PATH=${CI_PROJECT_PATH:-case0sh/terraform-DO-droplets}
 ENV_NAME=${TF_ENV_NAME:-dev}
-
 CI_API_V4_URL=https://gitlab.com/api/v4
 CI_PROJECT_ID=${PROJECT_PATH//\//%2f}
 
@@ -21,6 +20,7 @@ TF_HTTP_UNLOCK_ADDRESS="${TF_HTTP_ADDRESS}/lock"
 TF_HTTP_UNLOCK_METHOD="DELETE"
 TF_HTTP_USERNAME="gitlab-token"
 TF_HTTP_RETRY_WAIT_MIN="5"
+TF_HTTP_PASSWORD="YOUR-ACCESS-TOKEN"
 
 terraform -v
 
