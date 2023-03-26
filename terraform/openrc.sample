@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+# this shell script defines required AWS env
+# simply replace missing values with yours and source this file :)
+export AWS_ACCESS_KEY_ID="--put your access key ID here--"
+export AWS_SECRET_ACCESS_KEY="--put your secret access key here--"
+export AWS_DEFAULT_REGION="us-east-1"
