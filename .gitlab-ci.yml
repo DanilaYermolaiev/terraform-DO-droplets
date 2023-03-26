@@ -31,7 +31,7 @@ variables:
 
 stages:
   - build
-  # - test
+  - test
   - infra
   - deploy
   - acceptance
