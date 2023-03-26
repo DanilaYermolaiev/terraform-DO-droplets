@@ -1,9 +1,9 @@
 include:
   - project: "to-be-continuous/terraform"
-    ref: "3.6.3"
+
     file: "/templates/gitlab-ci-terraform.yml"
   - project: "to-be-continuous/ansible"
-    ref: "3.5.1"
+
     file: "/templates/gitlab-ci-ansible.yml"
 
 variables:
@@ -31,7 +31,7 @@ variables:
 
 stages:
   - build
-
+  - test
   - infra
   - deploy
   - acceptance
