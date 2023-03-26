@@ -34,7 +34,7 @@ variable "ssh_pub_key_file" {
 variable "ssh_user_name" {
   description = "SSH username"
   type = string
-  default = "ec2-user"
+  default = "ubuntu"
 }
 
 variable "aws_region" {
