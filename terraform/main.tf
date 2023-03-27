@@ -51,7 +51,7 @@ resource "aws_instance" "webserver" {
       tags = {
         Name = "my-root-block"
       }
-    },
+    }
   ]
 
   vpc_security_group_ids = [ aws_security_group.webserver_sg.id ]
