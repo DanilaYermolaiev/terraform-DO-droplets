@@ -1,17 +1,108 @@
+# ---
+# - hosts: webserver
+#   gather_facts: True
+#   become: True
+
+#   vars:
+#     os_ignore_users: ['ubuntu']
+
+#   roles:
+#     - role: common
+#       tags: ["init"]
+
+#     - role: httpd
+#       tags: ["httpd"]
+
+#     # - role: reboot
+#     #   tags: ["init"]
 ---
-- hosts: webserver
-  gather_facts: True
-  become: True
+- hosts: all
+  tasks:
 
-  vars:
-    os_ignore_users: ['ubuntu']
+  - name: packages | ensure apt list dir exists
+    file:
+      path: /var/lib/apt/lists/
+      state: directory
+      mode: 0755
 
-  roles:
-    - role: common
-      tags: ["init"]
+  - name: Update apt cache
+    become: yes
+    apt:
+      update_cache: yes
 
-    - role: httpd
-      tags: ["httpd"]
+  #install packages for ubuntu 20.04
+  - name: Install additional packages
+    become: yes
+    apt:
+      pkg:
+        - ufw
+        - vim
+        - curl
+        - htop
+        - git 
+        - certbot
+        - nginx
+        - make
+    tags:
+      - config.packages
 
-    # - role: reboot
-    #   tags: ["init"]
+
+
+## open ports
+  - name: Deny all ingress connections
+    community.general.ufw:
+      policy: deny
+      direction: incoming
+    tags:
+      - config.firewall
+        
+  - name: allow ingress ssh
+    community.general.ufw:
+      rule: allow
+      port: ssh
+      proto: tcp
+      direction: in
+    tags:
+      - config.firewall
+
+  - name: allow rpc ingress port
+    community.general.ufw:
+      rule: allow
+      proto: tcp
+      direction: in
+      port: '80'
+    tags:
+      - config.firewall
+
+  - name: allow ingress solana tcp ports
+    community.general.ufw:
+      rule: allow
+      proto: tcp
+      direction: in
+      port: '443'
+    tags:
+      - config.firewall
+
+  - name: Enable ufw
+    community.general.ufw:
+      state: enabled
+    tags:
+      - config.firewall
+
+
+# nginx
+  - name: reload nginx
+    shell: sudo systemctl reload nginx
+
+
+  - name: sysctl > conf
+    shell: echo "net.ipv4.ip_forward = 1" | sudo tee /etc/sysctl.d/60-custom.conf
+
+  - name: sysctl > conf
+    shell: echo "net.core.default_qdisc=fq" | sudo tee -a /etc/sysctl.d/60-custom.conf
+
+  - name: sysctl > conf
+    shell: echo "net.ipv4.tcp_congestion_control=bbr" | sudo tee -a /etc/sysctl.d/60-custom.conf
+
+  - name: sysctl > conf
+    shell: sudo sysctl -p /etc/sysctl.d/60-custom.conf
