@@ -12,6 +12,18 @@ variable "environment_name" {
   default = "dev"
 }
 
+variable "linux_root_volume_size" {
+  type        = number
+  description = "Volumen size of root volumen of Linux Server"
+  default     = "30"
+}
+
+variable "linux_root_volume_type" {
+  type        = string
+  description = "Volumen type of root volumen of Linux Server. Can be standard, gp3, gp2, io1, sc1 or st1"
+  default     = "gp2"
+}
+
 # provided by the GitLab CI template
 variable "environment_slug" {
   description = "Environment FQDN"

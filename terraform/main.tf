@@ -38,21 +38,17 @@ resource "aws_instance" "webserver" {
   user_data                   = file("aws-user-data.sh")
   key_name                    = aws_key_pair.ansible_keypair.key_name
   monitoring                  = true
-  encrypted                   = true
+
   associate_public_ip_address = true
 
-  enable_volume_tags = false
-  root_block_device = [
-    {
-      encrypted   = true
-      volume_type = "gp3"
-      throughput  = 200
-      volume_size = 30
-      tags = {
-        Name = "my-root-block"
-      }
-    }
-  ]
+  # root disk
+  root_block_device {
+    volume_size           = var.linux_root_volume_size
+    volume_type           = var.linux_root_volume_type
+    delete_on_termination = true
+    encrypted             = true
+  }
+
 
   vpc_security_group_ids = [ aws_security_group.webserver_sg.id ]
   tags = {
