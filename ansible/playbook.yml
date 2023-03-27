@@ -48,47 +48,6 @@
 
 
 
-# ## open ports
-#   - name: Deny all ingress connections
-#     community.general.ufw:
-#       policy: deny
-#       direction: incoming
-#     tags:
-#       - config.firewall
-        
-#   - name: allow ingress ssh
-#     community.general.ufw:
-#       rule: allow
-#       port: ssh
-#       proto: tcp
-#       direction: in
-#     tags:
-#       - config.firewall
-
-#   - name: allow rpc ingress port
-#     community.general.ufw:
-#       rule: allow
-#       proto: tcp
-#       direction: in
-#       port: '80'
-#     tags:
-#       - config.firewall
-
-#   - name: allow ingress solana tcp ports
-#     community.general.ufw:
-#       rule: allow
-#       proto: tcp
-#       direction: in
-#       port: '443'
-#     tags:
-#       - config.firewall
-
-#   - name: Enable ufw
-#     community.general.ufw:
-#       state: enabled
-#     tags:
-#       - config.firewall
-
 
 # nginx
   - name: reload nginx
