@@ -33,11 +33,27 @@ resource "aws_security_group" "webserver_sg" {
 
 # EC2 instance
 resource "aws_instance" "webserver" {
-  ami                         = data.aws_ami.ubuntu-linux-2004.id
+  ami                         = data.aws_ami.ubuntu.id
   instance_type               = var.instance_type
   user_data                   = file("aws-user-data.sh")
   key_name                    = aws_key_pair.ansible_keypair.key_name
+  monitoring                  = true
+  encrypted                   = true
   associate_public_ip_address = true
+
+  enable_volume_tags = false
+  root_block_device = [
+    {
+      encrypted   = true
+      volume_type = "gp3"
+      throughput  = 200
+      volume_size = 30
+      tags = {
+        Name = "my-root-block"
+      }
+    },
+  ]
+
   vpc_security_group_ids = [ aws_security_group.webserver_sg.id ]
   tags = {
     Name = "${var.environment_slug}-webserver"
@@ -57,6 +73,21 @@ data "aws_ami" "ubuntu-linux-2004" {
     name   = "name"
     values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
   }
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+}
+
+data "aws_ami" "ubuntu" {
+  most_recent = true
+  owners      = ["679593333241"]
+
+  filter {
+    name   = "name"
+    values = ["ubuntu-minimal/images/hvm-ssd/ubuntu-focal-20.04-*"]
+  }
+
   filter {
     name   = "virtualization-type"
     values = ["hvm"]
