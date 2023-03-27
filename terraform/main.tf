@@ -65,20 +65,7 @@ resource "aws_key_pair" "ansible_keypair" {
   public_key = file(var.ssh_pub_key_file)
 }
 
-# Get latest Ubuntu Linux Bionic Beaver
-data "aws_ami" "ubuntu-linux-2004" {
-  most_recent = true
-  owners      = ["099720109477"] # Canonical
-  filter {
-    name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
-  }
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-}
-
+# Get latest Ubuntu Linux 
 data "aws_ami" "ubuntu" {
   most_recent = true
   owners      = ["679593333241"]
