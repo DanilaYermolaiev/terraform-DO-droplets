@@ -16,7 +16,7 @@ variable "environment_name" {
 variable "environment_slug" {
   description = "Environment FQDN"
   type = string
-  default = "terralab"
+  default = "dev"
 }
 
 variable "instance_type" {
