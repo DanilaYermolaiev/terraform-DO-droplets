@@ -5,11 +5,9 @@ include:
   - project: "to-be-continuous/ansible"
     ref: "3.5.1"
     file: "/templates/gitlab-ci-ansible.yml"
-
 variables:
   # non-secret AWS variables
   # AWS_ACCESS_KEY_ID & AWS_SECRET_ACCESS_KEY & AWS_DEFAULT_REGION are defined as secret GitLab CI variables
-
   # Terraform
   TF_PROJECT_DIR: "terraform"
   TF_STAGING_ENABLED: "true"
