@@ -25,10 +25,10 @@
       state: directory
       mode: 0755
 
-  - name: Update apt cache
-    become: yes
-    apt:
-      update_cache: yes
+  # - name: Update apt cache
+  #   become: yes
+  #   apt:
+  #     update_cache: yes
 
   #install packages for ubuntu 20.04
   - name: Install additional packages
