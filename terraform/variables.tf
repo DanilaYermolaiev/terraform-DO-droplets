@@ -43,11 +43,11 @@ variable "ssh_key_name" {
   default     = "new"
 }
 
-# variable "ssh_pub_key_file" {
-#   description = "SSH public key file"
-#   type = string
-#   sensitive = true
-# }
+variable "ssh_pub_key_file" {
+  description = "SSH public key file"
+  type = string
+  sensitive = true
+}
 
 variable "ssh_user_name" {
   description = "SSH username"
