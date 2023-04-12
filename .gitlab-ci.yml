@@ -37,10 +37,7 @@ stages:
   - publish
   - infra-prod
   - production
-ansible-production:
-  script:
-    - echo "$ANSIBLE_PRIVATE_KEY"
-    - echo "$ANSIBLE_PUBLIC_KEY"
+
 # override tfsec to allow failure
 tf-tfsec:
   rules:
