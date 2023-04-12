@@ -36,7 +36,6 @@ resource "aws_instance" "webserver" {
   ami                         = data.aws_ami.ubuntu.id
   instance_type               = var.instance_type
   user_data                   = file("aws-user-data.sh")
-  #key_name   = var.ssh_key_name
   key_name                    = aws_key_pair.ansible_keypair.key_name
   monitoring                  = true
 

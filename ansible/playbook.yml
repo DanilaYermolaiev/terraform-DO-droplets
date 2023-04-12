@@ -23,7 +23,7 @@
         enabled: true
         state: started
 
-    - name: configure nftables for Nginx
+    - name: configure nftables
       become: true
       template:
         src: nftables.conf.j2
