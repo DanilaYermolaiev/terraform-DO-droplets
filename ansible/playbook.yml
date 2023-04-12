@@ -1,67 +1,45 @@
-# ---
-# - hosts: webserver
-#   gather_facts: True
-#   become: True
-
-#   vars:
-#     os_ignore_users: ['ubuntu']
-
-#   roles:
-#     - role: common
-#       tags: ["init"]
-
-#     - role: httpd
-#       tags: ["httpd"]
-
-#     # - role: reboot
-#     #   tags: ["init"]
 ---
-- hosts: all
+- name: Install Nginx and configure nftables for web server
+  hosts: all
+  become: true
+  
   tasks:
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
 
-  - name: packages | ensure apt list dir exists
-    file:
-      path: /var/lib/apt/lists/
-      state: directory
-      mode: 0755
+    - name: Configure nftables for web server
+      apt:
+        name: nftables
+        state: present
+      notify:
+        - enable nftables
 
-  # - name: Update apt cache
-  #   become: yes
-  #   apt:
-  #     update_cache: yes
+  handlers:
+    - name: enable nftables
+      service:
+        name: nftables
+        enabled: true
+        state: started
 
-  #install packages for ubuntu 20.04
-  - name: Install additional packages
-    become: yes
-    apt:
-      pkg:
-        - ufw
-        - vim
-        - curl
-        - htop
-        - git 
-        - certbot
-        - nginx
-        - make
-    tags:
-      - config.packages
+    - name: configure nftables for Nginx
+      become: true
+      template:
+        src: nftables.conf.j2
+        dest: /etc/nftables.conf
+        mode: '0644'
+      notify:
+        - restart nftables
 
+  post_tasks:
+    - name: Restart Nginx
+      service:
+        name: nginx
+        state: restarted
 
-
-
-# nginx
-  - name: reload nginx
-    shell: sudo systemctl reload nginx
-
-
-  - name: sysctl > conf
-    shell: echo "net.ipv4.ip_forward = 1" | sudo tee /etc/sysctl.d/60-custom.conf
-
-  - name: sysctl > conf
-    shell: echo "net.core.default_qdisc=fq" | sudo tee -a /etc/sysctl.d/60-custom.conf
-
-  - name: sysctl > conf
-    shell: echo "net.ipv4.tcp_congestion_control=bbr" | sudo tee -a /etc/sysctl.d/60-custom.conf
-
-  - name: sysctl > conf
-    shell: sudo sysctl -p /etc/sysctl.d/60-custom.conf
+  handlers:
+    - name: restart nftables
+      service:
+        name: nftables
+        state: restarted
