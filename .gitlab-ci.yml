@@ -23,7 +23,7 @@ variables:
   # ANSIBLE_STAGING_PLAYBOOK_FILE: "playbook.yml"
   ANSIBLE_PROD_PLAYBOOK_FILE: "playbook.yml"
   ANSIBLE_LINT_DISABLED: "true"
-  ANSIBLE_PRIVATE_KEY: '$ANSIBLE_PRIVATE_KEY' # is defined as secret GitLab CI variables
+  ANSIBLE_PRIVATE_KEY: "" # is defined as secret GitLab CI variables
   # set env url using Terraform generated env
   ANSIBLE_ENVIRONMENT_URL: "http://${tf_public_dns}"
 
