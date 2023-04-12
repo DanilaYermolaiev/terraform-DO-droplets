@@ -34,8 +34,6 @@ stages:
   - deploy
   - acceptance
   - publish
-  - infra-prod
-  - production
 
 # override tfsec to allow failure
 tf-tfsec:
