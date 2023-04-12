@@ -40,6 +40,7 @@ variable "instance_type" {
 variable "ssh_pub_key_file" {
   description = "SSH public key file"
   type        = string
+  default = "~/.ssh/id_ed25519.pub"
 
 }
 
