@@ -37,12 +37,6 @@ variable "instance_type" {
   default = "t3.micro"
 }
 
-# variable "ssh_key_name" {
-#   description = "SSH key name"
-
-#   default     = "new"
-# }
-
 variable "ssh_pub_key_file" {
   description = "SSH public key file"
   type        = string
