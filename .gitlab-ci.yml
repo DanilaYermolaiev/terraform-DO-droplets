@@ -12,7 +12,7 @@ variables:
   TF_PROJECT_DIR: "terraform"
   TF_STAGING_ENABLED: "true"
   TF_PROD_ENABLED: "false"
-  TF_VAR_ssh_pub_key_file: '$ssh_pub_key_file'
+  TF_VAR_ssh_pub_key_file: ""
   #file is defined as secret GitLab CI variables (declares 'ssh_pub_key_file' Terraform variable)
   TF_TFSEC_ENABLED: "false"
   TF_CHECKOV_ENABLED: "false"
@@ -23,7 +23,7 @@ variables:
   # ANSIBLE_STAGING_PLAYBOOK_FILE: "playbook.yml"
   ANSIBLE_PROD_PLAYBOOK_FILE: "playbook.yml"
   ANSIBLE_LINT_DISABLED: "true"
-  ANSIBLE_PRIVATE_KEY: "" # is defined as secret GitLab CI variables
+  ANSIBLE_PRIVATE_KEY: $ANSIBLE_PRIVATE_KEY # is defined as secret GitLab CI variables
   # set env url using Terraform generated env
   ANSIBLE_ENVIRONMENT_URL: "http://${tf_public_dns}"
 

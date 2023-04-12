@@ -57,11 +57,8 @@ resource "aws_instance" "webserver" {
 }
 
 resource "aws_key_pair" "ansible_keypair" {
-  key_name   = "ansible-key"
-  public_key = file(var.ssh_pub_key_file)
-  
+  key_name   = "new"  
 }
-
 # Get latest Ubuntu Linux 
 data "aws_ami" "ubuntu" {
   most_recent = true
