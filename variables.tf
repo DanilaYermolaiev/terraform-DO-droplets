@@ -13,7 +13,7 @@ variable "key_name" {
 
 variable "aws_region" {
   description = "AWS region to launch servers."
-  default     = "eu-north-1"
+  default     = "us-east-1"
 }
 
 # Ubuntu Precise 16.04 LTS (x64)
