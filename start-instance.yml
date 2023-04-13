@@ -6,6 +6,11 @@ package_upgrade: true
 packages:
   - nginx
   - nftables
+  - apt-transport-https
+  - ca-certificates
+  - curl
+  - gnupg-agent
+  - software-properties-common
 
 runcmd:
   - systemctl enable nftables.service
@@ -33,10 +38,18 @@ runcmd:
   - echo "    # Allow HTTPS traffic" >> /etc/nftables.conf
   - echo "    tcp dport 443 accept" >> /etc/nftables.conf
   - echo "" >> /etc/nftables.conf
+  - echo "    # Allow Docker traffic" >> /etc/nftables.conf
+  - echo "    tcp dport {2376,2377,7946} accept" >> /etc/nftables.conf
+  - echo "    udp dport {7946,4789} accept" >> /etc/nftables.conf
+  - echo "" >> /etc/nftables.conf
   - echo "    # Drop all other traffic" >> /etc/nftables.conf
   - echo "    drop" >> /etc/nftables.conf
   - echo "  }" >> /etc/nftables.conf
   - echo "}" >> /etc/nftables.conf
   - systemctl restart nftables.service
-  - systemctl enable nginx.service
-  - systemctl start nginx.service
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+  - add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+  - apt update
+  - apt install -y docker-ce docker-ce-cli containerd.io
+  - systemctl enable docker.service
+  - systemctl start docker.service
