@@ -1,32 +1,9 @@
-# Digital Ocean and Terraform workshop 
+# AWS and Terraform workshop 
 
 ## Prerequisite
 1. Linux workstation.
 2. `wget` package installed on your workstation.
-
-## How to install Terraform?
-
-1. Download terraform package from [terraform.io/downloads](ttps://terraform.io/downloads.html).
-- Version  for amd64
-```bash
-wget https://releases.hashicorp.com/terraform/1.2.5/terraform_1.2.5_linux_amd64.zip -O /tmp/terraform.zip
-```
-- Version for arm64
-```bash
-wget https://releases.hashicorp.com/terraform/1.2.5/terraform_1.2.5_linux_arm64.zip -O /tmp/terraform.zip
-```
-
-
-2. Unzip the terraform binary to a directory which is included in your system `PATH`.
-```bash
-sudo unzip /tmp/terraform.zip -d /usr/local/bin/
-```
-3. Verify installation.
-```bash
-terraform --help
-```
-
-
+3. Install Terraform 
 ## How to run Terraform project?
 
 1. Navigate to terraform project directory.
@@ -39,10 +16,10 @@ terraform --help
 ```bash
 terraform init
 ```
-```
-export PROJECT_ID="44572"
-export TF_USERNAME="case0sh"
-export TF_PASSWORD=""
+```bash
+export PROJECT_ID="<Project ID>"
+export TF_USERNAME="<GitLab Username>"
+export TF_PASSWORD="<Access Token>"
 export TF_ADDRESS="https://gitlab.com/api/v4/projects/${PROJECT_ID}/terraform/state/tf_state"
 
 terraform init \
