@@ -19,7 +19,7 @@ variable "ebs_volume_size" {
 variable "ebs_volume_type" {
   type        = string
   description = "Volumen type volumen of Linux Server. Can be standard, gp3, gp2, io1, sc1 or st1"
-  default     = "standart"
+  default     = "gp2"
 }
 # provided by the GitLab CI template
 variable "environment_slug" {
@@ -38,7 +38,7 @@ variable "ssh_key_name" {
   description = "SSH key name"
   type        = string
   default     = "new"
-
+}
 variable "ssh_user_name" {
   description = "SSH username"
   type        = string
@@ -86,6 +86,6 @@ variable "cloud_init_filepath" {
 # Ubuntu Precise 16.04 LTS (x64)
 variable "aws_amis" {
   default = {
-    eu-north-1c = "ami-064087b8d355e9051"
+    eu-north-1 = "ami-064087b8d355e9051"
   }
 }

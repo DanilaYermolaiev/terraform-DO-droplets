@@ -71,9 +71,9 @@ resource "aws_instance" "webserver" {
   ami = lookup(var.aws_amis, var.aws_region)
 
   instance_type = var.instance_type
-  user_data  = data.template_file.user_data.rendered
-  key_name   = var.ssh_key_name
-  monitoring = true
+  user_data     = data.template_file.user_data.rendered
+  key_name      = var.ssh_key_name
+  monitoring    = true
 
   subnet_id                   = aws_subnet.public-subnet.id
   vpc_security_group_ids      = [aws_security_group.webserver_sg.id]
@@ -84,8 +84,8 @@ resource "aws_instance" "webserver" {
     type = "ssh"
 
     # The default username for our AMI
-    user        = var.ssh_user_name
-    key_name    = var.ssh_key_name
+    user     = var.ssh_user_name
+    key_name = var.ssh_key_name
 
     # The connection will use the local SSH agent for authentication.
   }
@@ -96,7 +96,7 @@ resource "aws_instance" "webserver" {
     delete_on_termination = true
     encrypted             = true
   }
-    #EBS Block Storage
+  #EBS Block Storage
   ebs_block_device {
     device_name           = "/dev/sdb"
     volume_size           = var.ebs_volume_size
