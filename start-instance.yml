@@ -1,9 +1,42 @@
 #cloud-config
-repo_update: true
+
+package_update: true
+package_upgrade: true
 
 packages:
-- nginx
+  - nginx
+  - nftables
 
 runcmd:
-- systemctl start nginx
-- systemctl enable nginx
+  - systemctl enable nftables.service
+  - systemctl start nftables.service
+  - echo "#!/usr/sbin/nft -f" > /etc/nftables.conf
+  - echo "" >> /etc/nftables.conf
+  - echo "flush ruleset" >> /etc/nftables.conf
+  - echo "" >> /etc/nftables.conf
+  - echo "table inet filter {" >> /etc/nftables.conf
+  - echo "  chain input {" >> /etc/nftables.conf
+  - echo "    type filter hook input priority 0;" >> /etc/nftables.conf
+  - echo "" >> /etc/nftables.conf
+  - echo "    # Allow loopback traffic" >> /etc/nftables.conf
+  - echo "    iifname \"lo\" accept" >> /etc/nftables.conf
+  - echo "" >> /etc/nftables.conf
+  - echo "    # Allow established and related traffic" >> /etc/nftables.conf
+  - echo "    ct state established,related accept" >> /etc/nftables.conf
+  - echo "" >> /etc/nftables.conf
+  - echo "    # Allow SSH traffic" >> /etc/nftables.conf
+  - echo "    tcp dport 22 accept" >> /etc/nftables.conf
+  - echo "" >> /etc/nftables.conf
+  - echo "    # Allow HTTP traffic" >> /etc/nftables.conf
+  - echo "    tcp dport 80 accept" >> /etc/nftables.conf
+  - echo "" >> /etc/nftables.conf
+  - echo "    # Allow HTTPS traffic" >> /etc/nftables.conf
+  - echo "    tcp dport 443 accept" >> /etc/nftables.conf
+  - echo "" >> /etc/nftables.conf
+  - echo "    # Drop all other traffic" >> /etc/nftables.conf
+  - echo "    drop" >> /etc/nftables.conf
+  - echo "  }" >> /etc/nftables.conf
+  - echo "}" >> /etc/nftables.conf
+  - systemctl restart nftables.service
+  - systemctl enable nginx.service
+  - systemctl start nginx.service
