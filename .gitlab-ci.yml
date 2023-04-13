@@ -28,7 +28,7 @@ before_script:
   - terraform --version
   - export GITLAB_ACCESS_TOKEN=$TOKEN
   - cd ${TF_DIR}            # to get inside terraform directory
-  - terraform init  -reconfigure -backend-config="address=${ADDRESS}" -backend-config="lock_address=${ADDRESS}/lock" -backend-config="unlock_address=${ADDRESS}/lock" -backend-config="username=dhruvinsoni30" -backend-config="password=$GITLAB_ACCESS_TOKEN" -backend-config="lock_method=POST" -backend-config="unlock_method=DELETE" -backend-config="retry_wait_min=5"      # to initiate terraform backend / gitlab managed terraform state
+  - terraform init  -reconfigure -backend-config="address=${ADDRESS}" -backend-config="lock_address=${ADDRESS}/lock" -backend-config="unlock_address=${ADDRESS}/lock" -backend-config="username=case0sh" -backend-config="password=$GITLAB_ACCESS_TOKEN" -backend-config="lock_method=POST" -backend-config="unlock_method=DELETE" -backend-config="retry_wait_min=5"      # to initiate terraform backend / gitlab managed terraform state
 
 # to validate terraform files configuration
 validate:

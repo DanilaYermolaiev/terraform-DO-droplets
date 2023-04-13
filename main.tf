@@ -36,7 +36,6 @@ resource "aws_subnet" "forwarder" {
 # Our default security group to access the instances
 resource "aws_security_group" "default" {
   name        = "terraform"
-  description = "Project - Terraform"
   vpc_id      = aws_vpc.default.id
 
   # SSH access from anywhere
@@ -93,15 +92,13 @@ resource "aws_instance" "demoinstance" {
 
     # The connection will use the local SSH agent for authentication.
   }
+
   user_data     = data.template_file.init.rendered
-  instance_type = "t2.micro"
+  instance_type = "t3.medium"
 
   # Lookup the correct AMI based on the region we specified
   ami = lookup(var.aws_amis, var.aws_region)
 
-  tags = {
-    Name = "demoinstance"
-  }
 
   # Root Block Storage
   root_block_device {

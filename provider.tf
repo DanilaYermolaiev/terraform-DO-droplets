@@ -4,5 +4,5 @@ terraform {
       source = "hashicorp/aws"
     }
   }
-  # backend "http" {}
+  backend "http" {}
 }

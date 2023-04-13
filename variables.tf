@@ -13,7 +13,7 @@ variable "key_name" {
 
 variable "aws_region" {
   description = "AWS region to launch servers."
-  default     = "us-east-1"
+  default     = "eu-north-1"
 }
 
 # Ubuntu Precise 16.04 LTS (x64)
@@ -26,5 +26,4 @@ variable "cloud_init_filepath" {
   type        = string
   description = "filepath to cloud-init script"
   default     = "./start-instance.yml"
-
 }
