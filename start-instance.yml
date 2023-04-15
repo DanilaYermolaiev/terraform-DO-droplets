@@ -18,7 +18,8 @@ packages:
   - gnupg
   - lsb-release
   - unattended-upgrades
-
+  - git 
+  - vim 
 runcmd:
   - systemctl enable nftables.service
   - systemctl start nftables.service
@@ -56,5 +57,6 @@ runcmd:
   - systemctl start docker
   - systemctl enable docker.service
   - systemctl start docker.service
+  - snap install hugo
   
 final_message: "The system is finally up, after $UPTIME seconds"
