@@ -102,12 +102,12 @@ resource "aws_instance" "webserver" {
     encrypted             = true
   }
   #EBS Block Storage
-  ebs_block_device {
-    device_name           = "/dev/sdb"
-    volume_size           = var.ebs_volume_size
-    volume_type           = var.ebs_volume_type
-    delete_on_termination = false
-  }
+  # ebs_block_device {
+  #   device_name           = "/dev/sdb"
+  #   volume_size           = var.ebs_volume_size
+  #   volume_type           = var.ebs_volume_type
+  #   delete_on_termination = true
+  # }
 }
 
 data "template_file" "user_data" {
