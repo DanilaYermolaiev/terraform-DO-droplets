@@ -52,9 +52,7 @@ resource "digitalocean_droplet" "web" {
       "./installations.sh"
         ]
   }
-  #   provisioner "local-exec" {
-  #   command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook  -u root -i '${self.ipv4_address},' --private-key ${var.privatekeypath} -e 'pub_key=${var.publicekeypath}' files/install.yml"
-  # }
+
 }
 
 # Firewall
