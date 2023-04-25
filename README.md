@@ -17,7 +17,7 @@
 terraform init
 ```
 ```bash
-export PROJECT_ID="<>"
+export PROJECT_ID="<project-id>"
 export TF_USERNAME="<gitlab-user>"
 export TF_PASSWORD="gitlab-token"
 export TF_ADDRESS="https://gitlab.com/api/v4/projects/${PROJECT_ID}/terraform/state/tf_state"
