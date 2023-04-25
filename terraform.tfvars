@@ -1,5 +1,5 @@
 
-do_token = "dfsdf" # Digital Ocean token
+do_token = "<token>" # Digital Ocean token
 
 
 ssh_name = "case" # Keys on Digital Ocean
