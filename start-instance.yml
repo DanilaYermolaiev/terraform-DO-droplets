@@ -21,6 +21,37 @@ packages:
   - git 
   - vim 
   - hugo
+# write_files:
+#   - path: /home/ubuntu/backup.sh
+#   # content text must be indented
+#     content: |
+#       #!/bin/bash
+#       # Set variables
+#       S3_BUCKET="projectzomboid-server"
+#       BACKUP_DIR="/home/ubuntu/projectzomboid-server"
+#       TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
+#       # Backup website files to a tar archive
+#       cd $BACKUP_DIR
+#       tar -czf website_$TIMESTAMP.tar.gz /home/ubuntu/projectzomboid-server
+#       # Upload the backup to Amazon S3
+#       aws s3 cp website_$TIMESTAMP.tar.gz s3://$S3_BUCKET/backups/
+#       # Delete old backups
+#       aws s3 ls s3://$S3_BUCKET/backups/ | awk '{print $4}' | sort | head -n -4 | while read old_backup; do aws s3 rm s3://$S3_BUCKET/backups/$old_backup; done
+      
+#   - path: /home/ubuntu/restore.sh
+#   # content text must be indented
+#     content: |
+#       #!/bin/bash
+
+#       # Set variables
+#       S3_BUCKET="projectzomboid-server"
+#       BACKUP_DIR="/home/ubuntu/projectzomboid-server"
+#       # Download the latest backup from Amazon S3
+#       aws s3 ls s3://$S3_BUCKET/backups/ | awk '{print $4}' | sort | tail -n 1 | while read latest_backup; do aws s3 cp s3://$S3_BUCKET/backups/$latest_backup $BACKUP_DIR; done
+#       # Extract the backup files
+#       cd $BACKUP_DIR
+#       tar -xzf website_*.tar.gz -C /home/ubuntu/projectzomboid-server --strip-components=2
+
 runcmd:
   - systemctl enable nftables.service
   - systemctl start nftables.service

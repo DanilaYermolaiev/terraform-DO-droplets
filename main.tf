@@ -101,7 +101,7 @@ resource "aws_instance" "webserver" {
     delete_on_termination = true
     encrypted             = true
   }
-  #EBS Block Storage
+  # EBS Block Storage
   # ebs_block_device {
   #   device_name           = "/dev/sdb"
   #   volume_size           = var.ebs_volume_size

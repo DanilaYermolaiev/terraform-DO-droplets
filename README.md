@@ -1,4 +1,4 @@
-# AWS and Terraform workshop 
+# DO and Terraform workshop 
 
 ## Prerequisite
 1. Linux workstation.
@@ -17,9 +17,9 @@
 terraform init
 ```
 ```bash
-export PROJECT_ID="<Project ID>"
-export TF_USERNAME="<GitLab Username>"
-export TF_PASSWORD="<Access Token>"
+export PROJECT_ID="44774811"
+export TF_USERNAME="case0sh"
+export TF_PASSWORD="glpat-kx9vxxdfrjQ24eNZBzxx"
 export TF_ADDRESS="https://gitlab.com/api/v4/projects/${PROJECT_ID}/terraform/state/tf_state"
 
 terraform init \
