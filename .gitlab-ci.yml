@@ -1,75 +1,83 @@
 ---
-# Pipeline will only trigger when something is pushed to main branch 
+# pipeline will be triggered only when pushed to main branch 
 workflow:  
     rules:
       - if: $CI_COMMIT_BRANCH != "main" && $CI_PIPELINE_SOURCE != "merge_request_event"
         when: never
       - when: always
 
-# List of variables
 variables:
-  TF_DIR: ${CI_PROJECT_DIR}       # Directory in which terraform files are kept
-  STATE_NAME: "lock"          # Name of terraform state used in "terraform init"command
+  TF_DIR: ${CI_PROJECT_DIR}   # directory in which terraform files are kept
+  STATE_NAME: "tf_state"      # name of terraform state used in "terraform init" command
   ADDRESS: "https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/terraform/state/${STATE_NAME}"
 
-# Stages of the pipeline
+# stages in pipeline
 stages:
   - validate
   - plan
   - apply
   - destroy
 
-# Image which will use in each stage
+# image used in each and each stage  
 image:
   name: hashicorp/terraform:light
   entrypoint: [""]
 
-# Script to be executed before each stage 
+# script to be executed before each stage 
 before_script:
   - terraform --version
   - export GITLAB_ACCESS_TOKEN=$TOKEN
-  - cd ${TF_DIR}            # To get inside the working directory
-  - terraform init  -reconfigure  
-  - backend-config="address=${ADDRESS}" 
-  - backend-config="lock_address=${ADDRESS}/lock" -backend-config="unlock_address=${ADDRESS}/lock" -backend-config="username=case0sh" -backend-config="password=$GITLAB_ACCESS_TOKEN" 
-  - backend-config="lock_method=POST" 
-  - backend-config="unlock_method=DELETE" 
-  - backend-config="retry_wait_min=5"    
-  - mkdir -p ~/.ssh
-  - chmod 700 ~/.ssh
-  - eval $(ssh-agent -s)
-  - ssh-keygen -o -a 100 -t ed25519 -f ~/.ssh/id_ed25519
-  - ls -la ~/.ssh
+  - cd ${TF_DIR}            # to get inside terraform directory
+  - terraform init  -reconfigure -backend-config="address=${ADDRESS}" -backend-config="lock_address=${ADDRESS}/lock" -backend-config="unlock_address=${ADDRESS}/lock" -backend-config="username=case0sh" -backend-config="password=$GITLAB_ACCESS_TOKEN" -backend-config="lock_method=POST" -backend-config="unlock_method=DELETE" -backend-config="retry_wait_min=5"      # to initiate terraform backend / gitlab managed terraform state
 
-
-# To validate terraform files configuration
+# to validate terraform files configuration
 validate:
   stage: validate
   script:
     - terraform validate
+  cache:           # to create caches of terraform modules present in .terraform folder  
+    key: ${CI_COMMIT_REF_NAME}
+    paths:
+    - ${TF_DIR}/.terraform
+    policy: pull-push
 
-# To check the plan of the infrastructure
+# to check the plan of the infrastructure
 plan:
   stage: plan
   script:
     - terraform plan 
-  dependencies:              
+  dependencies:               # dependent on validate stage.
     - validate
+  cache:
+    key: ${CI_COMMIT_REF_NAME}
+    paths:
+    - ${TF_DIR}/.terraform
+    policy: pull
 
-# To create infrastructure on AWS
+# to create infrastructure on cloud
 apply:
   stage: apply
   script:
-    - terraform apply  -auto-approve
-  dependencies:              
+    - terraform apply  -auto-approve -lock=false
+  dependencies:              # dependent on plan stage.
     - plan
+  cache:
+    key: ${CI_COMMIT_REF_NAME}
+    paths:
+    - ${TF_DIR}/.terraform
+    policy: pull
 
-# To destroy infrastructure on cloud. It needs manual approval 
+# to destroy infrastructure on cloud. It needs manual aqpproval 
 destroy:
   stage: destroy
   script:
     - terraform destroy  -auto-approve
-  dependencies:          
+  dependencies:           # dependent on plan & apply stage. 
     - plan
     - apply
+  cache:
+    key: ${CI_COMMIT_REF_NAME}
+    paths:
+    - ${TF_DIR}/.terraform
+    policy: pull
   when: manual
