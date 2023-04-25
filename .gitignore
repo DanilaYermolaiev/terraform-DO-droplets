@@ -7,8 +7,7 @@ terraform.tfvars
 .terraform.tfstate.d
 *.pyc
 credentials*.json
-new.pem
-new.pub
+
 
 # tf lock file
 .terraform.lock.hcl

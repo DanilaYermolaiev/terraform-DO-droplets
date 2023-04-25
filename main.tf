@@ -1,120 +1,114 @@
-###################################
-## Virtual Machine Module - Main ##
-###################################
-
-# Create Elastic IP for the EC2 instance
-resource "aws_eip" "linux-eip" {
-  vpc = true
-  tags = {
-    Name = "${var.environment_slug}-${random_string.random.result}-linux-eip"
-
-  }
+resource "digitalocean_ssh_key" "mypub" {
+  name       = "Pubkeys"
+  public_key = file(var.publicekeypath)
 }
 
+# Droplet
+resource "digitalocean_droplet" "web" {
+  image              = var.droplet_image
+  name               = "dev-${count.index}"
+  region             = var.droplet_region
+  size               = var.droplet_size
+  backups            = false
+  monitoring         = true
+  count  = 1
+
+  ssh_keys = [
+    data.digitalocean_ssh_key.ssh.id,
+    digitalocean_ssh_key.mypub.fingerprint
+    ]
+
+  ## Files
+  provisioner "file" {
+    source = "files/installations.sh"
+    destination = "installations.sh"
+
+    connection {
+    host = self.ipv4_address
+    type = "ssh"
+    user  = var.user
+    private_key = file(var.privatekeypath)
+    agent  = false
+    timeout  = "90s"
+
+    } 
+  }
+  provisioner "remote-exec" {
+    connection {
+    host = self.ipv4_address
+    type = "ssh"
+    user  = var.user
+    private_key = file(var.privatekeypath)
+    agent  = false
+    timeout  = "160s"
+
+    } 
+    inline = [
+      "apt update  && sudo apt install -y gnupg software-properties-common python3 -y", "echo Done!",
+      "chmod +x ~/installations.sh",
+      "cd ~/",
+      "./installations.sh",
+      "ls -la",
+      "./installations.sh"
+        ]
+  }
+
+}
+
+# Firewall
+resource "digitalocean_firewall" "web" {
+  name = "firewall-${random_string.random.result}"
+  # droplet_ids = [digitalocean_droplet.web.id]
+
+  inbound_rule {
+    protocol         = "tcp"
+    port_range       = "22"
+    source_addresses = ["0.0.0.0/0", "::/0"]
+  }
+
+  inbound_rule {
+    protocol         = "tcp"
+    port_range       = "80"
+    source_addresses = ["0.0.0.0/0", "::/0"]
+  }
+
+  inbound_rule {
+    protocol         = "tcp"
+    port_range       = "443"
+    source_addresses = ["0.0.0.0/0", "::/0"]
+  }
+
+  inbound_rule {
+    protocol         = "icmp"
+    source_addresses = ["0.0.0.0/0", "::/0"]
+  }
+
+  outbound_rule {
+    protocol              = "tcp"
+    port_range            = "1-65535"
+    destination_addresses = ["0.0.0.0/0", "::/0"]
+  }
+
+  outbound_rule {
+    protocol              = "udp"
+    port_range            = "1-65535"
+    destination_addresses = ["0.0.0.0/0", "::/0"]
+  }
+
+  outbound_rule {
+    protocol              = "icmp"
+    destination_addresses = ["0.0.0.0/0", "::/0"]
+  }
+}
 resource "random_string" "random" {
   length  = 3
   upper   = false
   special = false
 }
 
-# Security Group
-resource "aws_security_group" "webserver_sg" {
-  name        = "${var.environment_slug}-${random_string.random.result}-webserver-sg"
-  description = "WebServer DMZ"
-  vpc_id      = aws_vpc.vpc.id
-  tags = {
-    Name = "${var.environment_slug}-${random_string.random.result}-webserver-sg"
-  }
-
-
-  # SSH access from anywhere
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  # HTTP access from the VPC
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  ingress {
-    from_port   = 1313
-    to_port     = 1313
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  # outbound internet access
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+output "droplet_output" {
+  value = {
+    for droplet in digitalocean_droplet.web:
+    droplet.name => droplet.ipv4_address
   }
 }
-
-# Associate Elastic IP to Linux Server
-resource "aws_eip_association" "linux-eip-association" {
-  instance_id   = aws_instance.webserver.id
-  allocation_id = aws_eip.linux-eip.id
-}
-
-# EC2 instance
-resource "aws_instance" "webserver" {
-  # Lookup the correct AMI based on the region we specified
-  ami = lookup(var.aws_amis, var.aws_region)
-
-  instance_type = var.instance_type
-  user_data     = data.template_file.user_data.rendered
-  key_name      = var.ssh_key_name
-  monitoring    = true
-
-  subnet_id                   = aws_subnet.public-subnet.id
-  vpc_security_group_ids      = [aws_security_group.webserver_sg.id]
-  associate_public_ip_address = var.linux_associate_public_ip_address
-  source_dest_check           = false
-
-  connection {
-    type = "ssh"
-
-    # The default username for our AMI
-    user     = var.ssh_user_name
-    key_name = var.ssh_key_name
-
-    # The connection will use the local SSH agent for authentication.
-  }
-  # root disk
-  root_block_device {
-    volume_size           = var.linux_root_volume_size
-    volume_type           = var.linux_root_volume_type
-    delete_on_termination = true
-    encrypted             = true
-  }
-  # EBS Block Storage
-  # ebs_block_device {
-  #   device_name           = "/dev/sdb"
-  #   volume_size           = var.ebs_volume_size
-  #   volume_type           = var.ebs_volume_type
-  #   delete_on_termination = true
-  # }
-}
-
-data "template_file" "user_data" {
-
-  template = file(var.cloud_init_filepath)
-}
-# resource "aws_ec2_instance_state" "webserver" {
-#   instance_id = aws_instance.webserver.id
-#   state       = "stopped"
-# }
