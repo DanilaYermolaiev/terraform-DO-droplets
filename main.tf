@@ -1,8 +1,6 @@
-resource "digitalocean_ssh_key" "mypub" {
-  name       = "Pubkeys"
-  public_key = file(var.publicekeypath)
-}
-
+###################################
+## Virtual Machine Module - Main ##
+###################################
 # Droplet
 resource "digitalocean_droplet" "web" {
   image              = var.droplet_image
@@ -102,15 +100,4 @@ resource "digitalocean_firewall" "web" {
     destination_addresses = ["0.0.0.0/0", "::/0"]
   }
 }
-resource "random_string" "random" {
-  length  = 3
-  upper   = false
-  special = false
-}
 
-output "droplet_output" {
-  value = {
-    for droplet in digitalocean_droplet.web:
-    droplet.name => droplet.ipv4_address
-  }
-}
