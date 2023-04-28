@@ -11,6 +11,9 @@ variables:
   STATE_NAME: "tf_state"      # name of terraform state used in "terraform init" command
   ADDRESS: "https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/terraform/state/${STATE_NAME}"
 
+  #TF_VAR_SECRET1: ${GITLAB_SECRET}
+  # TF_VAR_ssh_pub_key_file is defined as secret GitLab CI variables (declares 'ssh_pub_key_file' Terraform variable)
+
 # stages in pipeline
 stages:
   - validate
